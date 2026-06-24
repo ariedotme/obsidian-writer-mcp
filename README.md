@@ -56,6 +56,7 @@ If your `obsidian-writer` service is not reachable as `http://obsidian-writer:30
 ### Inbox
 
 - `obsidian_append_inbox`: append one line to today's inbox file in the configured default vault.
+- `obsidian_read_inbox`: read inbox items for a specific day. The `date` argument is optional; when omitted, `obsidian-writer` uses today's date.
 
 ### Lists
 
@@ -103,6 +104,18 @@ Listing supports:
 - `vault`: optional vault override
 
 ## Examples
+
+Read today's inbox:
+
+```python
+obsidian_read_inbox()
+```
+
+Read a specific inbox day:
+
+```python
+obsidian_read_inbox(date="2026-06-24")
+```
 
 Create a task using the configured default vault:
 

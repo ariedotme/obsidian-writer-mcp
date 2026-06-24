@@ -110,6 +110,32 @@ async def obsidian_append_inbox(
 
 
 @mcp.tool()
+async def obsidian_read_inbox(
+    date: str | None = None,
+    vault: str | None = None,
+) -> dict:
+    """
+    Read inbox items for a specific day from the configured default vault.
+    Use when the user asks what was captured/saved in the inbox today or on a
+    specific date. Date must be YYYY-MM-DD; when omitted, obsidian-writer uses today.
+    """
+    params = {"vault": vault or OBSIDIAN_DEFAULT_VAULT}
+    if date is not None and date.strip() != "":
+        if not re.match(r"^\d{4}-\d{2}-\d{2}$", date.strip()):
+            return {"ok": False, "error": "Invalid date: expected YYYY-MM-DD"}
+        params["date"] = date.strip()
+
+    query = "&".join(
+        f"{quote(str(key), safe='')}={quote(str(value), safe='')}"
+        for key, value in params.items()
+    )
+    result = await get(f"/inbox?{query}")
+    if result.get("ok") is True and isinstance(result.get("response"), dict):
+        return result["response"]
+    return result
+
+
+@mcp.tool()
 async def obsidian_list_lists() -> dict:
     """
     List existing Obsidian lists in the configured default vault.
